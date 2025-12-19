@@ -13,28 +13,28 @@
 - [x] Interactive 2D floor plan viewer with zoom/pan
 - [x] Real-time entity position rendering (Sprites)
 - [x] History trail toggle (30min default)
-- [ ] **NEW**: Confidence meter for entity tracks (Explainable AI)
-- [ ] **NEW**: Evidence sidebar for tracked entities (WiFi + Camera + Access links)
-- [ ] **NEW**: Jump-floor animations (Elevator/Stair node transitions)
+- [x] **NEW**: Confidence meter for entity tracks (Explainable AI)
+- [x] **NEW**: Evidence sidebar for tracked entities (WiFi + Camera + Access links)
+- [x] **NEW**: Jump-floor animations (Elevator/Stair node transitions)
 
 ## Priority 3: Proactive Security Features
 - [x] Camera grid view (virtualized for scale)
 - [x] Real-time alert feed with severity badges
-- [ ] **NEW**: Correlation clusters view (Group alerts by actor/area)
-- [ ] **NEW**: One-click incident creation from alert clusters
-- [ ] **NEW**: Incident timeline visualization (Auto-generated from evidence)
+- [x] **NEW**: Correlation clusters view (Group alerts by actor/area)
+- [x] **NEW**: One-click incident creation from alert clusters
+- [x] **NEW**: Incident timeline visualization (Auto-generated from evidence)
 
 ## Priority 4: Advanced Integrations (Mocked for Demo)
-- [ ] **NEW**: Cisco Spaces "Detect & Locate" API simulation
-- [ ] **NEW**: IREX Smart Camera "Weapon Detection" event injection
-- [ ] **NEW**: Facial Recognition "Watchlist Match" workflow
-- [ ] **NEW**: Phone Signature "Device Fingerprinting" track linking
+- [x] **NEW**: Cisco Spaces "Detect & Locate" API simulation
+- [x] **NEW**: IREX Smart Camera "Weapon Detection" event injection
+- [x] **NEW**: Facial Recognition "Watchlist Match" workflow
+- [x] **NEW**: Phone Signature "Device Fingerprinting" track linking
 
 ## Priority 5: System Governance & Audit
 - [x] System status/health monitoring
-- [ ] **NEW**: Comprehensive Audit Log viewer for investigators
-- [ ] **NEW**: Privacy mode toggle (Anonymize names/faces in UI)
-- [ ] **NEW**: After-Action Report (PDF Export)
+- [x] **NEW**: Comprehensive Audit Log viewer for investigators
+- [x] **NEW**: Privacy mode toggle (Anonymize names/faces in UI)
+- [x] **NEW**: After-Action Report (PDF Export)
 
 ## Future Roadmap (Post-Demo)
 - [ ] WebSocket real-time updates (replace current polling)
@@ -45,3 +45,8 @@
 - [ ] Mobile app companion
 - [ ] 800 MHz radio dispatch integration
 - [ ] CALEA compliance reporting
+- [ ] **NEW**: AI-Powered Voice Command for SOC operators (e.g., "Show me the nearest cameras to the Main Green alert")
+- [ ] **NEW**: Augmented Reality (AR) Overlay for on-ground security responders
+- [ ] **NEW**: Automated Drone Dispatch integration for rapid visual assessment
+- [ ] **NEW**: Biometric Access Control with touchless palm/iris recognition
+- [ ] **NEW**: Sentiment Analysis of public safety radio/social media feeds for early warning
