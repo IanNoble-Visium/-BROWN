@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
@@ -21,9 +21,107 @@ import {
   AlertTriangle,
   Radio,
   Wifi,
-  Eye
+  Eye,
+  Video,
+  FileDown
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const bRollVideos = [
+  { id: 1, path: '/videos/Aerial_drone_shot_202512190257_k2dt8.mp4', description: "Aerial drone shot circling Brown University's Main Green at golden hour." },
+  { id: 2, path: '/videos/Smooth_tracking_shot_202512190257_ix12a.mp4', description: "Tracking shot through Barus & Holley engineering building." },
+  { id: 3, path: '/videos/Timelapse_of_sciences_202512190257_02tnf.mp4', description: "Time-lapse of Sciences Library (SciLi) from dawn to dusk." },
+  { id: 4, path: '/videos/Establishing_shot_of_202512190257_j2z4n.mp4', description: "Keeney Quad residential area at night with security lighting." },
+  { id: 11, path: '/videos/Extreme_closeup_of_202512190257_3u2qj.mp4', description: "Extreme close-up of a modern dome security camera rotating." },
+  { id: 13, path: '/videos/Closeup_of_an_202512190257_8e7cb.mp4', description: "RFID card being tapped against a modern access control reader." },
+  { id: 21, path: '/videos/Wide_shot_of_202512190258_c01cv.mp4', description: "Modern security operations center with curved video wall." },
+  { id: 22, path: '/videos/Overtheshoulder_shot_of_202512190258_mphfb.mp4', description: "Security operator analyzing real-time location tracking." },
+  { id: 31, path: '/videos/Students_walking_safely_202512190258_robs5.mp4', description: "Students walking safely across campus at night." },
+  { id: 45, path: '/videos/Ai_facial_recognition_202512190300_zgzuc.mp4', description: "AI facial recognition visualization with confidence scores." },
+];
+
+function BRollSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [transitionType, setTransitionType] = useState('fade');
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % bRollVideos.length);
+      const types = ['fade', 'slide', 'dissolve'];
+      setTransitionType(types[Math.floor(Math.random() * types.length)]);
+    }, 10000); // Change video every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const variants = {
+    fade: {
+      initial: { opacity: 0 },
+      animate: { opacity: 1 },
+      exit: { opacity: 0 },
+    },
+    slide: {
+      initial: { x: '100%' },
+      animate: { x: 0 },
+      exit: { x: '-100%' },
+    },
+    dissolve: {
+      initial: { opacity: 0, scale: 1.1 },
+      animate: { opacity: 1, scale: 1 },
+      exit: { opacity: 0, scale: 0.9 },
+    },
+  };
+
+  const activeVariant = variants[transitionType as keyof typeof variants];
+
+  return (
+    <div className="relative w-full h-[500px] overflow-hidden rounded-2xl border border-border glow-border group">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={activeVariant.initial}
+          animate={activeVariant.animate}
+          exit={activeVariant.exit}
+          transition={{ duration: 1 }}
+          className="absolute inset-0"
+        >
+          <video
+            ref={videoRef}
+            src={bRollVideos[currentIndex].path}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+          <div className="absolute bottom-6 left-6 right-6">
+            <Badge variant="outline" className="mb-2 bg-primary/20 text-primary border-primary/50">
+              <Video className="w-3 h-3 mr-1" />
+              Live Demonstration Feed
+            </Badge>
+            <p className="text-white text-lg font-medium">
+              {bRollVideos[currentIndex].description}
+            </p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+      
+      {/* Navigation dots */}
+      <div className="absolute bottom-6 right-6 flex gap-2">
+        {bRollVideos.map((_, i) => (
+          <div
+            key={i}
+            className={`w-2 h-2 rounded-full transition-all ${
+              i === currentIndex ? 'bg-primary w-6' : 'bg-white/30'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Landing() {
   const [, setLocation] = useLocation();
@@ -34,12 +132,6 @@ export default function Landing() {
 
   const demoLoginMutation = trpc.auth.demoLogin.useMutation({
     onSuccess: (data) => {
-      // Store demo session
-      localStorage.setItem('eli_demo_session', JSON.stringify({
-        user: data.user,
-        token: data.token,
-        expiresAt: Date.now() + 24 * 60 * 60 * 1000
-      }));
       setTimeout(() => {
         setLocation('/dashboard');
       }, 500);
@@ -173,8 +265,9 @@ export default function Landing() {
                   size="lg" 
                   variant="outline"
                   className="border-border hover:bg-secondary"
+                  onClick={() => document.getElementById('resources')?.scrollIntoView({ behavior: 'smooth' })}
                 >
-                  Learn More
+                  View Resources
                   <ChevronRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
@@ -197,14 +290,15 @@ export default function Landing() {
               </div>
             </motion.div>
 
-            {/* Right side - Login card */}
+            {/* Right side - Login card or B-Roll */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              id="demo-login"
+              className="space-y-6"
             >
-              <Card className="command-panel glow-border">
+              <BRollSection />
+              <Card className="command-panel glow-border" id="demo-login">
                 <CardHeader className="space-y-1 pb-4">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
@@ -368,6 +462,102 @@ export default function Landing() {
                 <p className="text-sm font-medium">{integration.name}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Resources & CEO Content Section */}
+      <section className="py-24 relative bg-secondary/20" id="resources">
+        <div className="container">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/50">Resources</Badge>
+              <h2 className="text-4xl font-bold">Executive Overview & Materials</h2>
+              <p className="text-muted-foreground text-lg">
+                Access the official Brown University ELI initiative presentation and hear directly from our leadership 
+                about the mission to transform campus safety through advanced technology.
+              </p>
+              
+              <div className="space-y-4 pt-4">
+                <Card className="command-panel border-primary/20 hover:border-primary/50 transition-colors">
+                  <CardContent className="p-6 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-500">
+                        <FileDown className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold">ELI Presentation Deck</h3>
+                        <p className="text-sm text-muted-foreground">PowerPoint Presentation (Final)</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon" asChild>
+                      <a href="/docs/Brown_ELI_Presentation_Final.pptx" download>
+                        <FileDown className="w-5 h-5" />
+                      </a>
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="command-panel border-primary/20 hover:border-primary/50 transition-colors">
+                  <CardContent className="p-6 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-500">
+                        <Shield className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold">Security Initiative PR</h3>
+                        <p className="text-sm text-muted-foreground">v1 Documentation</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon" asChild>
+                      <a href="/docs/Campus Safety Initiative PR v1.docx" download>
+                        <FileDown className="w-5 h-5" />
+                      </a>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <Card className="command-panel glow-border overflow-hidden">
+                <div className="aspect-video relative bg-black group">
+                  <video 
+                    src="/docs/Campus Safety Initiative_1080p.mp4" 
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                    controls
+                    poster="/images/ceo-video-poster.jpg" // Note: This might not exist, but good practice
+                  />
+                  <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                        ML
+                      </div>
+                      <div>
+                        <p className="text-white font-bold">Mark Lucky</p>
+                        <p className="text-white/70 text-sm font-medium">CEO, Visium Technologies</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <CardHeader>
+                  <CardTitle>Vision for Campus Safety</CardTitle>
+                  <CardDescription>
+                    Mark Lucky discusses the Emergency Location Intelligence (ELI) platform and its impact on modernizing security.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
           </div>
         </div>
       </section>

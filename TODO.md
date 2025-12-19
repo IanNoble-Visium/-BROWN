@@ -1,112 +1,47 @@
 # Brown University ELI Platform - TODO
 
-## Phase 1: Foundation
-- [x] Database schema (buildings, floors, cameras, events, incidents, tracked_entities, location_events, alerts, config)
-- [x] Dark command center theme with Brown University branding
-- [x] Global styling and design system
-- [x] Switch to Neon PostgreSQL database
-- [x] Update schema for PostgreSQL compatibility
-- [x] Seed database with mock data (10 buildings, 34 floors, 666 cameras, 500 entities, 50 alerts, 15 incidents)
-
-## Phase 2: Authentication & Landing
+## Priority 1: Core Demo Readiness
 - [x] Landing page with hero section, features, and demo login
 - [x] Demo authentication (admin/admin credentials)
-- [x] Protected routes and role-based access
-- [x] Dashboard layout with sidebar navigation
+- [x] B-roll video integration on landing page (Randomized transitions)
+- [x] Executive Overview section (Mark Lucky video & PPTX download)
+- [x] Database schema & Neon migration
+- [x] Seed database with realistic mock data
+- [x] Protected routes and dashboard layout
 
-## Phase 3: Floor Plan Generation
-- [x] Generate Barus & Holley floor plan image
-- [x] Generate Sciences Library (SciLi) floor plan image
-- [x] Generate Keeney Quad floor plan image
-- [x] Generate Main Green floor plan image
-- [x] Generate Faunce House floor plan image
-- [x] Generate Wilson Hall floor plan image
-- [x] Generate Sayles Hall floor plan image
-- [x] Generate MacMillan Hall floor plan image
-- [x] Generate Pembroke Hall floor plan image
-
-## Phase 4: Real-Time Location Tracking Dashboard
+## Priority 2: Enhanced Tracking & Visualization
 - [x] Interactive 2D floor plan viewer with zoom/pan
-- [x] Real-time entity position rendering
-- [x] Building/floor selector
-- [x] History trail toggle (30min default, configurable)
-- [x] Color-coded icons by role (staff, students, visitors, unknown, alerts)
-- [x] Layer toggles (entities, cameras, sensors, zones)
-- [x] Search by name functionality
-- [x] Role filter dropdown
-- [ ] WebSocket connection for live updates (using polling currently)
-- [ ] Entity details panel on click
+- [x] Real-time entity position rendering (Sprites)
+- [x] History trail toggle (30min default)
+- [ ] **NEW**: Confidence meter for entity tracks (Explainable AI)
+- [ ] **NEW**: Evidence sidebar for tracked entities (WiFi + Camera + Access links)
+- [ ] **NEW**: Jump-floor animations (Elevator/Stair node transitions)
 
-## Phase 5: Camera Monitoring Dashboard
-- [x] Camera grid view (virtualized for ~800 cameras)
-- [x] Camera status indicators (online/offline/maintenance)
-- [x] AI-enabled camera badges
-- [x] Grid size options (2x2, 3x3, 4x4)
-- [x] Search and filter by building/status
-- [x] Pagination for camera feeds
-- [ ] Single camera full-screen view
-- [ ] Mock HLS video streams
-- [ ] Alert overlay on camera feeds
-
-## Phase 6: Alerts & Activity Dashboard
+## Priority 3: Proactive Security Features
+- [x] Camera grid view (virtualized for scale)
 - [x] Real-time alert feed with severity badges
-- [x] Filtering by severity and type
-- [x] Status tabs (All, Active, Acknowledged, Resolved)
-- [x] AI confidence display
-- [x] Location and timestamp display
-- [x] Acknowledge/Resolve action buttons
-- [ ] Correlation clusters view
-- [ ] One-click incident creation from alerts
+- [ ] **NEW**: Correlation clusters view (Group alerts by actor/area)
+- [ ] **NEW**: One-click incident creation from alert clusters
+- [ ] **NEW**: Incident timeline visualization (Auto-generated from evidence)
 
-## Phase 7: Incident Management
-- [x] Incident list with status and priority
-- [x] Building location display
-- [ ] Incident detail view
-- [ ] Timeline visualization
-- [ ] Response team assignment
-- [ ] Escalation workflows
+## Priority 4: Advanced Integrations (Mocked for Demo)
+- [ ] **NEW**: Cisco Spaces "Detect & Locate" API simulation
+- [ ] **NEW**: IREX Smart Camera "Weapon Detection" event injection
+- [ ] **NEW**: Facial Recognition "Watchlist Match" workflow
+- [ ] **NEW**: Phone Signature "Device Fingerprinting" track linking
 
-## Phase 8: Entity Management
-- [x] Entity list with role and risk score
-- [x] Watchlist indicator
-- [x] Last seen location and time
-- [ ] Entity detail view with movement history
-- [ ] Watchlist management
+## Priority 5: System Governance & Audit
+- [x] System status/health monitoring
+- [ ] **NEW**: Comprehensive Audit Log viewer for investigators
+- [ ] **NEW**: Privacy mode toggle (Anonymize names/faces in UI)
+- [ ] **NEW**: After-Action Report (PDF Export)
 
-## Phase 9: Dashboard Overview
-- [x] Stats cards (entities, alerts, cameras, incidents)
-- [x] Recent alerts feed
-- [x] Entity breakdown by role
-- [x] Quick action buttons
-- [x] Recent incidents list
-- [x] Auto-refresh every 10 seconds
-
-## Phase 10: Mock Data & Integration
-- [x] Mock data generation script
-- [x] Database seeding with realistic data
-- [ ] Simulated entity movements (real-time)
-- [ ] Camera event simulation
-- [ ] Door access event simulation
-- [ ] Wi-Fi location update simulation
-- [ ] Alert trigger simulation
-
-## Phase 11: API & Integration Endpoints
-- [ ] Webhook endpoint for IREX cameras
-- [ ] Access control integration endpoint
-- [ ] Motion sensor integration endpoint
-- [ ] Cisco Catalyst Center integration endpoint
-- [ ] Facial recognition integration endpoint
-- [ ] Phone signature integration endpoint
-
-## Future Enhancements (Post-Demo)
-- [ ] WebSocket real-time updates (replace polling)
+## Future Roadmap (Post-Demo)
+- [ ] WebSocket real-time updates (replace current polling)
 - [ ] Neo4j topology graph integration
 - [ ] Cloudinary image storage
-- [ ] Google AI Vision integration
-- [ ] Predictive analytics
+- [ ] Google AI Vision integration for image metadata
+- [ ] Predictive analytics & Risk scoring
+- [ ] Mobile app companion
 - [ ] 800 MHz radio dispatch integration
 - [ ] CALEA compliance reporting
-- [ ] Mobile app companion
-- [ ] B-roll video integration on landing page
-- [ ] Presentation/documentation section
-- [ ] Sales materials download

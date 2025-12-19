@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useAuth } from '@/_core/hooks/useAuth';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,35 +64,22 @@ export default function ELIDashboardLayout({ children }: ELIDashboardLayoutProps
   const [collapsed, setCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [user, setUser] = useState<{ name: string; role: string; email: string } | null>(null);
-
-  useEffect(() => {
-    // Check for demo session
-    const session = localStorage.getItem('eli_demo_session');
-    if (session) {
-      const parsed = JSON.parse(session);
-      if (parsed.expiresAt > Date.now()) {
-        setUser(parsed.user);
-      } else {
-        localStorage.removeItem('eli_demo_session');
-        setLocation('/');
-      }
-    } else {
-      setLocation('/');
-    }
-  }, [setLocation]);
+  const { user, logout, loading, isAuthenticated } = useAuth({ 
+    redirectOnUnauthenticated: true,
+    redirectPath: '/' 
+  });
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('eli_demo_session');
+  const handleLogout = async () => {
+    await logout();
     setLocation('/');
   };
 
-  if (!user) return null;
+  if (loading || !user) return null;
 
   return (
     <div className="min-h-screen bg-background flex">

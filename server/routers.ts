@@ -11,27 +11,7 @@ import {
 } from "../drizzle/schema";
 import { eq, desc, and, gte, lte, sql, or, like } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import * as jose from "jose";
-
-// Demo authentication - simple JWT for admin/admin
-const DEMO_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "brown-eli-demo-secret-key-2024");
-
-async function createDemoToken(username: string): Promise<string> {
-  return await new jose.SignJWT({ username, role: "admin", demo: true })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("24h")
-    .sign(DEMO_SECRET);
-}
-
-async function verifyDemoToken(token: string): Promise<{ username: string; role: string } | null> {
-  try {
-    const { payload } = await jose.jwtVerify(token, DEMO_SECRET);
-    return payload as { username: string; role: string };
-  } catch {
-    return null;
-  }
-}
+import { sdk } from "./_core/sdk";
 
 export const appRouter = router({
   system: systemRouter,
@@ -42,7 +22,6 @@ export const appRouter = router({
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      ctx.res.clearCookie("demo_token", { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
     
@@ -54,9 +33,9 @@ export const appRouter = router({
       }))
       .mutation(async ({ input, ctx }) => {
         if (input.username === "admin" && input.password === "admin") {
-          const token = await createDemoToken(input.username);
+          const token = await sdk.createSessionToken(input.username);
           const cookieOptions = getSessionCookieOptions(ctx.req);
-          ctx.res.cookie("demo_token", token, {
+          ctx.res.cookie(COOKIE_NAME, token, {
             ...cookieOptions,
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
           });
@@ -68,17 +47,6 @@ export const appRouter = router({
         }
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid credentials" });
       }),
-      
-    // Verify demo session
-    verifyDemo: publicProcedure.query(async ({ ctx }) => {
-      const token = ctx.req.cookies?.demo_token;
-      if (!token) return null;
-      const user = await verifyDemoToken(token);
-      if (user) {
-        return { username: user.username, role: user.role, name: "Demo Administrator" };
-      }
-      return null;
-    }),
   }),
 
   // Buildings router
