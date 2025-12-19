@@ -1,0 +1,417 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: "Geist";
+  src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/files/geist-sans-latin-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/files/geist-sans-latin-500-normal.woff2")
+    format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/files/geist-sans-latin-600-normal.woff2")
+    format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-sans@5.0.1/files/geist-sans-latin-700-normal.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5.0.1/files/geist-mono-latin-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  /* Brown University brand colors */
+  --brown-primary: #4E3629;
+  --brown-red: #C41230;
+  --brown-gold: #FFC72C;
+  
+  /* Command center dark theme - default */
+  --radius: 0.625rem;
+  --background: oklch(0.12 0.01 250);
+  --foreground: oklch(0.95 0.01 250);
+  --card: oklch(0.15 0.015 250);
+  --card-foreground: oklch(0.95 0.01 250);
+  --popover: oklch(0.13 0.015 250);
+  --popover-foreground: oklch(0.95 0.01 250);
+  --primary: oklch(0.55 0.2 25);
+  --primary-foreground: oklch(0.98 0.01 250);
+  --secondary: oklch(0.22 0.02 250);
+  --secondary-foreground: oklch(0.9 0.01 250);
+  --muted: oklch(0.2 0.015 250);
+  --muted-foreground: oklch(0.65 0.01 250);
+  --accent: oklch(0.6 0.18 85);
+  --accent-foreground: oklch(0.15 0.01 250);
+  --destructive: oklch(0.55 0.2 25);
+  --destructive-foreground: oklch(0.98 0.01 250);
+  --border: oklch(0.25 0.02 250);
+  --input: oklch(0.2 0.015 250);
+  --ring: oklch(0.55 0.2 25);
+  --chart-1: oklch(0.6 0.2 200);
+  --chart-2: oklch(0.65 0.18 150);
+  --chart-3: oklch(0.55 0.15 25);
+  --chart-4: oklch(0.6 0.18 85);
+  --chart-5: oklch(0.5 0.15 300);
+  --sidebar: oklch(0.1 0.01 250);
+  --sidebar-foreground: oklch(0.9 0.01 250);
+  --sidebar-primary: oklch(0.55 0.2 25);
+  --sidebar-primary-foreground: oklch(0.98 0.01 250);
+  --sidebar-accent: oklch(0.18 0.02 250);
+  --sidebar-accent-foreground: oklch(0.9 0.01 250);
+  --sidebar-border: oklch(0.22 0.015 250);
+  --sidebar-ring: oklch(0.55 0.2 25);
+  
+  /* Custom ELI colors */
+  --eli-cyan: oklch(0.75 0.15 200);
+  --eli-cyan-dim: oklch(0.5 0.1 200);
+  --eli-green: oklch(0.7 0.2 145);
+  --eli-yellow: oklch(0.8 0.18 85);
+  --eli-orange: oklch(0.7 0.2 50);
+  --eli-red: oklch(0.6 0.25 25);
+  --eli-purple: oklch(0.6 0.2 300);
+  --eli-blue: oklch(0.6 0.15 250);
+  
+  /* Status colors */
+  --status-online: oklch(0.7 0.2 145);
+  --status-offline: oklch(0.5 0.02 250);
+  --status-warning: oklch(0.75 0.18 85);
+  --status-critical: oklch(0.6 0.25 25);
+  --status-maintenance: oklch(0.6 0.15 250);
+  
+  /* Entity role colors */
+  --entity-staff: oklch(0.6 0.15 250);
+  --entity-student: oklch(0.7 0.2 145);
+  --entity-visitor: oklch(0.75 0.18 85);
+  --entity-unknown: oklch(0.5 0.02 250);
+  --entity-alert: oklch(0.6 0.25 25);
+}
+
+.dark {
+  /* Dark mode inherits root (already dark) */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+  
+  /* Custom scrollbar for command center aesthetic */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: oklch(0.12 0.01 250);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.3 0.02 250);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.4 0.02 250);
+  }
+}
+
+@layer components {
+  /**
+   * Custom container utility that centers content and adds responsive padding.
+   *
+   * This overrides Tailwind's default container behavior to:
+   * - Auto-center content (mx-auto)
+   * - Add responsive horizontal padding
+   * - Set max-width for large screens
+   *
+   * Usage: <div className="container">...</div>
+   *
+   * For custom widths, use max-w-* utilities directly:
+   * <div className="max-w-6xl mx-auto px-4">...</div>
+   */
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* 16px - mobile padding */
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem; /* 24px - tablet padding */
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem; /* 32px - desktop padding */
+      padding-right: 2rem;
+      max-width: 1280px; /* Standard content width */
+    }
+  }
+  
+  /* Glassmorphism card */
+  .glass-card {
+    background-color: color-mix(in oklch, var(--card) 80%, transparent);
+    backdrop-filter: blur(24px);
+    border: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  
+  /* Command center panel */
+  .command-panel {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Glowing border effect */
+  .glow-border {
+    position: relative;
+    box-shadow: 0 0 15px rgba(196, 18, 48, 0.3);
+  }
+  
+  .glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(196, 18, 48, 0.5), transparent, rgba(78, 54, 41, 0.5));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  
+  /* Status indicator pulse */
+  .status-pulse {
+    position: relative;
+  }
+  
+  .status-pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+  
+  /* Grid pattern background */
+  .grid-pattern {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  /* Entity marker styles */
+  .entity-marker {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .entity-marker.staff { background-color: var(--entity-staff); }
+  .entity-marker.student { background-color: var(--entity-student); }
+  .entity-marker.visitor { background-color: var(--entity-visitor); }
+  .entity-marker.unknown { background-color: var(--entity-unknown); }
+  .entity-marker.alert { 
+    background-color: var(--entity-alert);
+    animation: alert-pulse 1s ease-in-out infinite;
+  }
+  
+  @keyframes alert-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(196, 18, 48, 0.7); }
+    50% { box-shadow: 0 0 0 10px rgba(196, 18, 48, 0); }
+  }
+  
+  /* Camera feed placeholder */
+  .camera-feed {
+    position: relative;
+    background-color: black;
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 16/9;
+  }
+  
+  .camera-feed::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%),
+      linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+    pointer-events: none;
+  }
+  
+  /* Alert severity badges */
+  .alert-badge {
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .alert-badge.critical {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: rgb(248, 113, 113);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  
+  .alert-badge.high {
+    background-color: rgba(249, 115, 22, 0.2);
+    color: rgb(251, 146, 60);
+    border: 1px solid rgba(249, 115, 22, 0.3);
+  }
+  
+  .alert-badge.medium {
+    background-color: rgba(234, 179, 8, 0.2);
+    color: rgb(250, 204, 21);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+  }
+  
+  .alert-badge.low {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: rgb(96, 165, 250);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+  
+  /* Stat card */
+  .stat-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+  }
+  
+  .stat-card .stat-value {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  
+  .stat-card .stat-label {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--muted-foreground);
+  }
+}
+
+@layer utilities {
+  /* Text glow effect */
+  .text-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
+  
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #C41230, #FFC72C);
+  }
+}

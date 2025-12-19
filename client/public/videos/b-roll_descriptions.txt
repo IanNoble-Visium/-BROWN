@@ -1,0 +1,55 @@
+Campus Environment & Architecture (1-10)
+1. Aerial drone shot slowly circling Brown University's Main Green at golden hour, students walking between historic brick buildings with autumn leaves falling, cinematic 4K quality
+2. Smooth tracking shot through the corridors of Barus & Holley engineering building, modern lighting reflecting off polished floors, empty hallways with classroom doors visible, professional documentary style
+3. Time-lapse of Sciences Library (SciLi) from dawn to dusk, clouds moving overhead, students entering and exiting, lights turning on as evening approaches, hyper-lapse effect
+4. Establishing shot of Keeney Quad residential area at night, warm lights glowing from windows, security lighting illuminating pathways, peaceful campus atmosphere, cinematic color grading
+5. Slow dolly shot through a large lecture hall with tiered seating, morning sunlight streaming through windows, empty seats waiting for students, academic atmosphere
+6. Wide aerial view of Brown University campus showing the relationship between buildings, green spaces, and pathways, late afternoon lighting casting long shadows
+7. Tracking shot following a pathway through Pembroke Campus, historic architecture on both sides, dappled sunlight through trees, peaceful academic setting
+8. Close-up pan across the ornate entrance of Sayles Hall, architectural details of the historic building, carved stone and brass fixtures, heritage and tradition
+9. Smooth gimbal shot entering Faunce House student center, capturing the busy common area, students studying and socializing, vibrant campus life
+10. Night exterior of Wilson Hall with dramatic uplighting, stars visible above, security cameras subtly visible on building corners, modern meets historic
+Security Technology & Equipment (11-20)
+11. Extreme close-up of a modern dome security camera slowly rotating, lens focusing, subtle LED indicators blinking, sleek black housing, professional product shot lighting
+12. Rack of security servers in a data center, blinking blue and green LEDs, cable management visible, cool blue ambient lighting, technology infrastructure
+13. Close-up of an RFID card being tapped against a modern access control reader, green LED confirmation, door clicking unlocked, smooth transaction
+14. Multiple security monitors displaying a grid of camera feeds, operator's silhouette visible, command center atmosphere, blue screen glow on faces
+15. Slow motion of a security camera's motorized pan-tilt mechanism adjusting position, mechanical precision, industrial design aesthetic
+16. Wi-Fi access point mounted on ceiling with subtle activity lights, data visualization overlay showing signal waves emanating outward, tech visualization
+17. Close-up of motion sensor with infrared lens, red indicator light pulsing gently, mounted on white wall, minimalist security hardware
+18. Server room cooling fans spinning, heat dissipation visible as slight air distortion, rows of equipment, mission-critical infrastructure
+19. Hands typing on keyboard in security operations center, multiple screens reflecting in glasses, professional monitoring environment
+20. Fiber optic cables with light pulses traveling through, macro shot showing data transmission, beautiful abstract technology visualization
+Command Center & Operations (21-30)
+21. Wide shot of a modern security operations center with curved video wall displaying campus maps and camera feeds, operators at workstations, blue ambient lighting
+22. Over-the-shoulder shot of security operator analyzing real-time location tracking on large display, dots moving on floor plan, professional interface
+23. Dramatic slow push-in on main command center video wall showing alert notification appearing, red highlight, urgent but controlled atmosphere
+24. Security team briefing in operations room, large screen showing campus overview, professional discussion, collaborative security management
+25. Close-up of operator's hands using trackball to control PTZ camera, smooth movements, professional equipment, skilled operation
+26. Split-screen effect showing multiple camera angles converging on single location, coordinated surveillance demonstration, technical capability
+27. Time-lapse of security operations center through a full shift change, day to night transition, continuous monitoring visualization
+28. Dramatic rack focus from security badge in foreground to command center screens in background, access and authority, professional environment
+29. Slow pan across row of workstations with operators monitoring different sectors, teamwork and coordination, 24/7 operations
+30. Close-up of incident management software interface, mouse clicking through options, creating report, professional workflow
+Campus Life & Safety (31-40)
+31. Students walking safely across campus at night, well-lit pathways, emergency blue light phone visible in background, secure environment
+32. Security officer on foot patrol greeting students, friendly interaction, community policing approach, trust and safety
+33. Emergency blue light station close-up with campus buildings soft-focused in background, safety infrastructure, reassuring presence
+34. Crowd of students exiting lecture hall after class, natural flow of people, daytime campus activity, normal operations
+35. Campus shuttle bus arriving at stop, students boarding safely, transportation security, coordinated campus services
+36. Night security patrol vehicle slowly driving through campus, headlights illuminating pathway, protective presence
+37. Students studying in library with security camera subtly visible in corner, unobtrusive protection, safe learning environment
+38. Emergency exit signs glowing in hallway, clear evacuation routes, safety infrastructure, preparedness
+39. Campus event with crowd, security personnel visible at perimeter, large gathering management, professional event security
+40. Parent dropping off student at residence hall, card access entry, safe handoff, family peace of mind
+Data Visualization & AI (41-50)
+41. Abstract visualization of data flowing through network nodes, blue and white particles, AI processing representation, futuristic technology
+42. 3D floor plan rendering with heat map overlay showing foot traffic patterns, data-driven insights, analytical visualization
+43. Animated network topology showing connections between cameras, sensors, and command center, system architecture visualization
+44. Real-time dashboard with live updating charts and metrics, numbers changing, KPI monitoring, operational intelligence
+45. AI facial recognition visualization with bounding boxes and confidence scores, ethical AI representation, advanced analytics
+46. Geographic information system (GIS) map of campus with layers toggling on/off, comprehensive situational awareness
+47. Timeline visualization showing incident correlation across multiple data sources, investigative capability, pattern recognition
+48. Predictive analytics graph showing risk assessment curves, AI-powered forecasting, proactive security
+49. Digital twin visualization of campus building with real-time sensor data overlays, IoT integration, smart campus
+50. Abstract representation of machine learning model processing video feeds, neural network visualization, AI-powered detection

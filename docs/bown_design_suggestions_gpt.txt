@@ -1,0 +1,492 @@
+According to a document from **Dec 17, 2025** (your “Campus Safety Initiative” draft), the core vision is to **fuse real-time video + sensor + operational data into a unified situational awareness layer**, with **explainable, auditable outputs** and **policy/role-based governance** to preserve campus trust. 
+
+Below is a concrete **design + architecture package** for the **Brown University Campus Security Monitoring Platform** (demo / proof-of-concept) that aligns with that vision, the TruContext-style integration approach, and the operational gaps highlighted by recent reporting.
+
+---
+
+## 1) Web research findings to drive requirements
+
+### What happened and what broke down (the “why now”)
+
+I did not find a widely reported **December 2024** Brown “shooting” incident in official/major coverage; the major campus incident that dominates credible reporting is **Dec 13, 2025**. ([Reuters][1])
+
+Key operational gaps reported:
+
+* **Limited interior camera coverage + no clear suspect footage** inside the building where the shooting occurred. Reuters explicitly reports that officials said there were **limited cameras inside** the engineering/physics building and **none recorded clear footage** of the gunman. ([Reuters][1])
+* The investigation and manhunt **leaned heavily on off-campus / residential security footage** due to a **lack of surveillance cameras in/around the classroom building and surrounding area**. ([Reuters][2])
+* **Crisis communications churn**: Brown-affiliated reporting shows an alert claiming a suspect was in custody that was later **retracted**, plus other evolving updates. ([The Brown Daily Herald][3])
+* Brown leadership referenced using the **Rave alert system** and coordination with city/state/federal law enforcement, as well as ongoing perimeter/crime-scene access constraints. ([Office of the President][4])
+
+Your internal “Reimagining Campus Security” brief also frames the same class of problems as: camera counts don’t equal safety, blind spots exist, and legacy VMS is passive (record/review) rather than proactive (detect/alert/fuse). 
+
+### Lessons learned from other universities (useful for demo storytelling)
+
+To ground this beyond Brown:
+
+* **UNC-Chapel Hill** commissioned an independent after-action review (CNA). Their exec summary highlights the role of **fast multi-channel alerting** (sirens + text/email) and emphasizes institutional learning across multiple response themes. ([Emergency Management and Planning][5])
+* **Michigan State**’s post-incident path included investing in a **Security Operations Center** and a **unified video/security platform** with analytics (tracking movement, barrier breaches, crowd counting, etc.), alongside explicit **privacy concern** discussions. ([Bridge Michigan][6])
+
+These two sources are great to cite in a Brown demo:
+**“We’re not just showing cameras—we’re showing modern incident response operations + governance.”**
+
+---
+
+## 2) What an “effective camera + fused security system” could have done differently
+
+Based on the gaps above, and aligning with your ELI + TruContext positioning:
+
+1. **Eliminate blind spots with coverage intelligence**
+
+* Maintain a **camera coverage heatmap** per building/floor and flag “high-risk rooms” with weak coverage (e.g., older interiors).
+* Add a **camera health** layer (online/offline, FPS drops, blocked lens, low-light quality).
+
+2. **Turn passive video into proactive detection**
+
+* Use smart-camera events (weapon/person-down/fight/anomalous crowd) to generate **actionable alerts** rather than relying on manual review—exactly the shift your internal brief describes. 
+
+3. **Fuse identities and locations (without pretending keycards are GPS)**
+
+* Use Wi‑Fi device location + door events + camera detections + face match events + “phone signature” to build a **confidence-scored track** of a person-of-interest.
+* Keep keycard/fob as **discrete events (“someone badged at Door X at Time T”)**, not continuous tracking.
+
+4. **Improve comms discipline through workflow**
+
+* Build “incident command” controls: **draft → approve → broadcast** for alerts, with a single source of truth feeding Rave / SMS / email / desktop popups. (This is a direct antidote to “conflicting updates” dynamics.) ([The Brown Daily Herald][3])
+
+5. **Make investigations faster with graph + timeline**
+
+* Your internal paper calls out topology graphs linking cameras/objects/alerts and incident management workflows. 
+* TruContext marketing emphasizes ingesting disparate raw data and deriving context/relationships. ([Carahsoft][7])
+
+That’s exactly the “wow” factor for a live demo: **click an alert → see the track → see linked evidence (door swipe + Wi‑Fi + camera) → see a timeline reconstruction**.
+
+---
+
+## 3) System architecture diagram
+
+Here’s an architecture that is **demo-friendly now** (mock data + scenario playback) and **production-extensible later** (Neo4j, Cloudinary, Google AI, etc.).
+
+```mermaid
+flowchart LR
+  subgraph Sources
+    CAM[IREX Smart Cameras\n(RTSP/ONVIF + analytics events)]
+    ACS[Access Control\n(fob/RFID door events)]
+    MOT[Motion Sensors\n(MQTT/HTTP)]
+    WIFI[Cisco Catalyst Center + Spaces/CMX\n(Wi‑Fi device location)]
+    FACE[Facial Recognition\n(match events)]
+    PHN[Phone Signatures\n(device fingerprint events)]
+  end
+
+  subgraph Ingestion
+    GW[API Gateway\nREST + WebSocket]
+    BUS[(Event Bus)\nRedis Streams / Kafka]
+    NORM[Normalization\nCanonical Event Model]
+    SIM[Demo Scenario Player\n(time slider + injectors)]
+  end
+
+  subgraph Storage
+    PG[(PostgreSQL)\nEvents + Alerts + Config]
+    OBJ[(Object Store)\nCloudinary future\nSnapshots/Clips]
+    GDB[(Neo4j future)\nEntity/relationship graph]
+  end
+
+  subgraph Analytics
+    FUS[Fusion Engine\nentity resolution + tracks\nconfidence scoring]
+    RULES[Rules/Alert Engine\ncorrelation + escalation]
+    AUD[Audit & Governance\nRBAC + policy checks]
+  end
+
+  subgraph UI
+    WEB[Web App\nELI Dashboard\n(Landing/Login/Dashboards)]
+  end
+
+  CAM -->|events| NORM
+  CAM -->|video| GW
+  ACS --> NORM
+  MOT --> NORM
+  WIFI --> NORM
+  FACE --> NORM
+  PHN --> NORM
+  SIM --> NORM
+
+  NORM --> BUS
+  BUS --> PG
+  BUS --> FUS
+  FUS --> PG
+  RULES --> PG
+  AUD --> PG
+
+  FUS --> RULES
+  GW <--> WEB
+  PG --> GW
+  OBJ --> GW
+  GDB --> GW
+```
+
+Why this matches TruContext/ELI patterns:
+
+* **“Ingest ANY data raw/native”** is a TruContext theme (cyber context originally, now physical security context). ([Carahsoft][7])
+* Your internal ELI description emphasizes **ingestion/normalization, dashboards, topology graphs, incident workflows**, and **ethical governance**. 
+
+---
+
+## 4) Database schema design (PostgreSQL)
+
+Design goal: support **real-time dashboards**, **fast time-range queries**, and **explainable correlation**.
+
+### Core entities (campus model)
+
+* `site(id, name)`
+* `building(id, site_id, name)`
+* `floor(id, building_id, name, level_number)`
+* `floorplan(id, floor_id, image_url, scale_px_per_meter, origin_x, origin_y, created_at)`
+* `zone(id, floor_id, name, polygon_geojson, type)`
+  *type: classroom/hallway/stairwell/entry/perimeter/etc.*
+* `camera(id, floor_id, name, rtsp_url, onvif_info, status, x, y, fov_deg)`
+* `door(id, floor_id, name, x, y)`
+* `access_reader(id, door_id, vendor, external_id)`
+* `sensor(id, floor_id, type, external_id, x, y)`
+  *type: motion/glassbreak/etc.*
+* `wifi_ap(id, floor_id, name, bssid, x, y)`
+
+### Identity + device model (privacy-aware)
+
+* `person(id, display_name, role, is_watchlist, metadata_jsonb)` *(optional for demo; can keep anonymized)*
+* `device(id, type, hashed_identifier, last_seen_at, metadata_jsonb)`
+  *type: wifi / ble / phone_signature*
+* `face_profile(id, person_id, embedding_ref, created_at)` *(store embedding in secure store; keep reference in DB)*
+
+### Canonical event store (the backbone)
+
+* `event(id, ts, source_type, source_id, event_type, severity, floor_id, x, y, payload_jsonb)`
+
+  * `source_type`: camera / access / wifi / motion / face / phone
+  * `event_type`: person_detected / weapon_detected / door_access / wifi_loc_update / motion_trigger / face_match / device_fingerprint / …
+  * Indexes:
+
+    * `(ts DESC)`
+    * `(floor_id, ts DESC)`
+    * `(event_type, ts DESC)`
+    * GIN index on `payload_jsonb` for demo search
+
+### Tracks (your “Pokémon map” people blobs + trails)
+
+* `track(id, created_at, last_seen_at, classification, risk_score, display_label)`
+* `track_observation(id, track_id, ts, floor_id, x, y, confidence, evidence_event_id)`
+* `track_link(id, track_id, link_type, linked_id, confidence, rationale_jsonb)`
+
+  * link_type: person/device/face_profile
+
+This structure supports:
+
+* **Current positions**: latest observation per track
+* **History trail**: query `track_observation` for last 30 minutes (default) or longer (configurable)
+
+### Alerts + incidents (ops workflow)
+
+* `alert_rule(id, name, enabled, conditions_jsonb, severity, throttling_jsonb)`
+* `alert(id, ts_opened, ts_updated, status, severity, title, description, floor_id, x, y, created_by)`
+* `alert_event(alert_id, event_id)` *(many-to-many evidence binding)*
+* `incident(id, ts_opened, status, commander_user_id, summary, tags)`
+* `incident_item(id, incident_id, type, ref_id, notes)`
+  *type: alert/event/track/camera/door*
+* `audit_log(id, ts, user_id, action, entity_type, entity_id, details_jsonb)`
+
+Your internal material repeatedly emphasizes **audit logs / role-based access / governance** as a must-have for campuses. 
+
+---
+
+## 5) Component/page structure (web app)
+
+### Public / demo-facing
+
+1. **Landing / Demo Hub** (`/`)
+
+* Hero: b-roll, “What happened / what’s changed” narrative
+* Buttons: “Live Demo”, “Scenario Playback”, “Docs”, “Deck”
+* Download/view: presentations, product sheets, videos
+
+2. **Login** (`/login`)
+
+* Demo credentials: `admin/admin` (as requested)
+
+### Authenticated dashboards
+
+3. **Real-Time Location Tracking** (`/ops/tracking`) **(Priority)**
+
+* Left: Building/Floor selector + zone filters
+* Center: 2D floor plan (sprite-based “top-down map”)
+* Right: “Who’s here” roster (tracks) + confidence + last seen
+* Bottom: timeline scrubber (live ↔ replay), trail toggle (default 30 min)
+
+4. **Camera Monitoring** (`/ops/cameras`)
+
+* Grid view (virtualized for scale)
+* Single camera view with overlays: active alerts, detections, zones
+* Camera health panel: offline/low FPS/obstruction
+
+5. **Alerts & Activity** (`/ops/alerts`)
+
+* Unified feed from all systems
+* Correlation clusters: “probable same actor/device”
+* One-click: create incident from alert cluster
+
+6. **Incident Workspace** (`/ops/incidents/:id`)
+
+* Evidence board: linked events, tracks, camera clips, access swipes
+* Collaboration notes + audit log view
+* Auto-generated timeline (“story of the incident”)
+
+7. **Admin / Config** (`/admin`)
+
+* Floorplan upload & calibration
+* Camera/door/sensor placement
+* Integration toggles (demo mode vs prod mode)
+* RBAC roles
+
+UI motif to copy from ELI/TruContext positioning:
+
+* “Single pane of glass” + “graph relationships + drill-down workflows” (explicit in your internal ELI description). 
+
+---
+
+## 6) API endpoint specifications (PoC-ready)
+
+Base: `/api/v1`
+
+### Auth
+
+* `POST /auth/login` → `{username, password}` → `{token, user}`
+* `GET /auth/me`
+* `POST /auth/logout`
+
+### Floors & maps
+
+* `GET /sites`
+* `GET /buildings?site_id=`
+* `GET /floors?building_id=`
+* `GET /floors/:floor_id/floorplan` → image + calibration
+* `GET /floors/:floor_id/zones`
+
+### Cameras
+
+* `GET /cameras?floor_id=`
+* `GET /cameras/:id`
+* `GET /cameras/:id/status`
+* `GET /cameras/:id/stream`
+  **Demo**: return HLS URL; **Prod**: WebRTC offer/answer flow
+
+### Events (raw + normalized)
+
+* `GET /events?floor_id=&type=&since=&until=&q=`
+* `GET /events/:id`
+
+### Tracks (real-time location + history trails)
+
+* `GET /tracks/current?floor_id=` → latest position per track
+* `GET /tracks/:id/history?since=&until=` → trail points
+* `GET /tracks/:id/explain` → evidence (why this is the same entity)
+
+### Alerts & incidents
+
+* `GET /alerts?status=&severity=&since=`
+* `POST /alerts/:id/ack`
+* `POST /alerts/:id/close`
+* `POST /incidents` / `GET /incidents` / `GET /incidents/:id`
+* `POST /incidents/:id/items` (attach event/track/camera/door)
+
+### Demo controls (this is what makes it “impressive” live)
+
+* `GET /demo/scenarios`
+* `POST /demo/scenarios/:id/start`
+* `POST /demo/scenarios/:id/pause`
+* `POST /demo/scenarios/:id/seek` (time slider)
+* `POST /demo/inject` (create mock event: door swipe, detection, wifi ping)
+
+### WebSocket (near real-time updates)
+
+* `WS /ws`
+
+  * topics: `events`, `alerts`, `tracks`, `camera_health`, `incidents`
+
+---
+
+## 7) Integration approach per data source
+
+### A) IREX smart cameras (same as Peru ELI)
+
+**Goal:** ingest both **video** and **analytics events**.
+
+* **Video**: RTSP/ONVIF into a media service that converts to browser-friendly streams (HLS/WebRTC).
+* **Events**: webhook or message-bus ingestion (JSON) → normalized canonical `event` records.
+
+Your internal brief explicitly calls for **standards-based connectors (RTSP, ONVIF, webhook APIs)**. 
+
+### B) Access control (door key fobs / RFID)
+
+* Pull from vendor API or subscribe to event stream.
+* Normalize to `event_type = door_access` with `door_id`, `card_id_hash`, `result`, `direction`, etc.
+* Fusion logic: door event provides a **high-confidence discrete location** at a timestamp.
+
+### C) Motion sensors
+
+* MQTT/HTTP ingestion (simple).
+* Used for:
+
+  * “Pop nearby cameras”
+  * “Zone occupancy spike”
+  * Correlation with Wi‑Fi + video detections
+
+### D) Wi‑Fi location (Cisco Catalyst Center + Cisco Spaces/CMX)
+
+What Cisco tooling supports (relevant to your floor-plan dashboard):
+
+* Catalyst Center / DNA Center supports **creating/importing floor maps** and placing wireless components for visualization. ([Cisco][8])
+* Cisco Spaces supports **location hierarchies and maps** that unify hierarchies and digital maps. ([Cisco][9])
+* Cisco Spaces Detect & Locate is positioned for **current & historical device location** and “device tracker” capabilities. ([Cisco Spaces][10])
+* Device “staleness” matters: Detect & Locate uses an eviction time (example: 10 minutes), so your UI should gray-out stale tracks. ([Cisco][11])
+
+Implementation in your app:
+
+* A `wifi-ingestor` polls or subscribes to Spaces/CMX location events.
+* Normalize to `event_type = wifi_loc_update` with `(x,y,floor_id, device_hash, rssi, confidence)`.
+* Fusion engine merges Wi‑Fi device with known device registry (optional) or leaves anonymous.
+
+**Important constraint (your note is correct):** you cannot “track” a traditional keycard like a Wi‑Fi tag—only door events. The system must represent that honestly in UI/logic.
+
+### E) Facial recognition (camera-based identification)
+
+For demo:
+
+* Use a mock “face_match” event generator with confidence scores and a watchlist.
+
+For production:
+
+* Store minimal biometric artifacts:
+
+  * embeddings in secure store (or encrypted column),
+  * strict RBAC for “reveal identity,”
+  * immutable audit logs for access/export.
+
+This matches your internal governance posture: **privacy-by-design, access controls, audit trails, bias mitigation**. 
+
+### F) Phone signatures (device fingerprinting)
+
+For demo:
+
+* Treat this as a second device signal that can sometimes link to Wi‑Fi observations.
+
+For production:
+
+* Be conservative: modern OS randomization and privacy policies make persistent tracking unreliable and sensitive; build it as **opt-in / policy-controlled** and emphasize “confidence-scored correlation,” not certainty.
+
+---
+
+## 8) UI/UX mockup recommendations (what will “wow” in a live demo)
+
+### The “Pokémon-style” tracking map
+
+Use a 2D renderer designed for sprites + smooth motion:
+
+* **PixiJS** or **Konva** (fast canvas/WebGL rendering)
+* Tweening movement between last two points for “alive” feel
+* Trail rendering:
+
+  * polyline for 30 minutes default
+  * density-based fading
+  * “jump floors” shown as elevator/stair node transitions
+
+### Explainability panel (differentiator)
+
+Every track shows:
+
+* **Confidence meter** (0–100)
+* Evidence list:
+
+  * “Wi‑Fi device seen near AP-12”
+  * “Door swipe at Door-3”
+  * “Person detected on Camera-17”
+  * “Face match 0.82 (policy restricted)”
+* This is how you align with the TruContext “verifiable intelligence / audit trails” messaging. ([EIN Presswire][12])
+
+### “Scenario Replay” mode (demo gold)
+
+* Time slider: T‑30 min → T+10 min
+* One-click “inject event”: door forced-open, weapon detected, motion spike
+* Auto-generated “incident timeline” board
+
+Your Brown deck already frames a **90-day roadmap** and emphasizes real-time detection, dispatch integration, privacy-first design, etc. 
+
+---
+
+## 9) Implementation roadmap (demo-first, extensible)
+
+### Phase 0 — Demo foundation (Week 1–2)
+
+* Frontend shell: Landing + login + nav
+* Postgres schema + seed data
+* WebSocket live updates
+* Scenario player (JSON timeline → events)
+
+### Phase 1 — Camera dashboard MVP (Week 3–4)
+
+* Camera inventory, grid view, single view
+* Mock streams (or limited real feeds)
+* Camera health status widget
+
+### Phase 2 — Real-time tracking MVP (Week 5–6)
+
+* Floorplans upload + calibration
+* Sprite-based tracks + smoothing
+* History trail toggle (30 min default; configurable)
+
+### Phase 3 — Correlation + alerts (Week 7–8)
+
+* Canonical events → fusion engine → tracks
+* Alert rules + alert feed + acknowledge/close
+* Create incident from alert cluster
+
+### Phase 4 — “TruContext-style” investigation UX (Week 9–10)
+
+* Incident workspace + evidence board
+* Relationship graph (optional in demo, huge impact visually)
+
+### Phase 5 — Demo polish (Week 11–12)
+
+* Guided “demo script” buttons
+* Performance hardening + UI animations
+* Exportable after-action summary (PDF) for showmanship
+
+This lines up with the 90-day concept already in your Brown proposal slides. 
+
+---
+
+## 10) Notes on the Peru ELI GitHub + TruContext site context
+
+* I attempted to retrieve `IanNoble-Visium/ELI` via web search, but it does **not appear publicly indexed/accessible** in my browsing tool results (likely private), so I can’t reliably quote specific components from that repo.
+* The Visium “platform” pages also appeared heavily script-rendered in my tool view, so I used alternate first-order sources describing TruContext capabilities (Carahsoft partner post; Visium press release). ([Carahsoft][7])
+
+If you can share either:
+
+* a ZIP export of the repo, or
+* screenshots of the Peru dashboard nav/pages/components,
+  …I can map **exact component reuse** (layout, state mgmt, WebSocket/event patterns, camera grid implementation) directly into this Brown PoC plan.
+
+---
+
+If you want, I can also produce a **one-page “demo storyboard”** (exact clicks/steps during the Brown presentation) so the platform tells a crisp story: *“gap → detection → tracking → correlation → response → audit.”*
+
+[1]: https://www.reuters.com/world/us/manhunt-brown-university-shooter-stretches-into-fourth-day-leaving-residents-2025-12-16/ "Authorities still trying to identify Brown University gunman three days into manhunt | Reuters"
+[2]: https://www.reuters.com/world/us/police-probe-links-between-brown-university-shooting-killing-mit-professor-2025-12-18/ "Gunman in Brown University shooting found dead, authorities say | Reuters"
+[3]: https://www.browndailyherald.com/article/2025/12/unimaginably-tragic-50-hours-since-the-shooting-at-brown "
+      ‘Unimaginably tragic’: Tracing the 50 hours after the shooting at Brown
+    "
+[4]: https://president.brown.edu/president/faculty-staff-and-students-campus-operations-after-yesterdays-tragedy "To Faculty, Staff and Students: Campus operations after yesterday’s tragedy | Office of the President | Brown University"
+[5]: https://emp.unc.edu/wp-content/uploads/sites/1304/2024/05/aug-28-2023-campus-shooting-after-action-report-executive-summary.pdf "University of North Carolina at Chapel Hill - Aug. 28, 2023, Campus Shooting After-Action Report: Executive Summary"
+[6]: https://bridgemi.com/talent-education/after-shooting-msu-adding-ai-surveillance-detect-threats-count-people/ "After shooting, MSU adding AI surveillance to detect threats, count people - Bridge Michigan"
+[7]: https://www.carahsoft.com/news/visium-partners-with-carahsoft "Visium Technologies and Carahsoft Partner | Carahsoft"
+[8]: https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/2-3-5/user_guide/b_cisco_dna_center_ug_2_3_5/m_work-with-wireless-2d-and-3d-maps.html?utm_source=chatgpt.com "Cisco DNA Center User Guide, Release 2.3.5.x"
+[9]: https://www.cisco.com/c/en/us/td/docs/wireless/spaces/config-guide/ciscospaces-configuration-guide/m-locations-and-maps.html?utm_source=chatgpt.com "Set Up Locations and Maps [Cisco Spaces]"
+[10]: https://spaces.cisco.com/detect-locate/?utm_source=chatgpt.com "Device Tracker for your Cisco network"
+[11]: https://www.cisco.com/c/en/us/td/docs/wireless/spaces/detect-and-locate/b-cisco-cle/device-tracking.html?utm_source=chatgpt.com "Cisco Spaces: Detect and Locate Configuration Guide"
+[12]: https://www.einnews.com/pr_news/873627456/visium-technologies-enters-1-3-trillion-ai-market-with-trucontext-the-first-fully-transparent-agentic-ai-platform "Visium Technologies Enters $1.3 Trillion AI Market with TruContext—The First Fully Transparent Agentic AI Platform - EIN Presswire"

@@ -1,0 +1,158 @@
+# Brown University Campus Security Monitoring Platform - Design & Architecture
+
+## Project Overview
+Design a comprehensive campus security web application for Brown University with approximately 800 CCTV cameras. This is a demo/proof-of-concept system to be presented following recent campus security incidents. The application will integrate multiple security data sources and provide real-time situational awareness.
+
+## Research Requirements
+1. **Search the web** for information about recent security incidents at Brown University (December 2024) to understand:
+- Timeline and details of the incident(s)
+- Security system gaps or failures that were identified
+- Recommendations from security experts
+- Similar incidents at other universities and lessons learned
+- What an effective camera/security system could have done differently
+
+2. **Retrieve context from our existing ELI project** (Peru surveillance platform):
+- GitHub: IanNoble-Visium/ELI (ELI Dashboard web - ELI Unified Dashboard - Peru Surveillance Platform)
+- Identify reusable code, architecture patterns, UI components, and functionality
+
+3. **Retrieve context from Visium Technologies**:
+- Review the TruContext Platform on the Visium Technologies website for design patterns and integration approaches
+
+## Core Integrations
+The platform will correlate data from:
+- **Smart Cameras**: IREX smart camera partnership (same technology as Peru ELI project)
+- **Access Control**: Door key fobs and RFID card readers
+- **Motion Sensors**: Building-wide motion detection
+- **Wi-Fi Location Services**: Cisco Catalyst Center integration (or equivalent custom solution)
+- Track Wi-Fi-enabled devices (phones, laptops) via probe/association data
+- Note: Standard door-access keycards cannot be tracked unless they are RTLS-capable Wi-Fi/RFID tags
+- Integration with Cisco Spaces/CMX for real-time location visualization
+- **Facial Recognition**: Camera-based identification
+- **Phone Signatures**: Device fingerprinting for tracking
+
+## Key Features & Dashboards
+
+### 1. Real-Time Location Tracking Dashboard (Priority Feature)
+- Display interactive floor plans of classrooms, hallways, conference rooms, and common areas
+- Render a 2D top-down view (similar to Pokémon-style game maps) showing:
+- Real-time positions of detected individuals as icons/avatars
+- Movement animations updated in near real-time
+- Data fusion from: Wi-Fi location, RFID/fob access events, facial recognition, phone signatures
+- **History Trail Feature**:
+- Toggle on/off historical movement paths
+- Default trail duration: 30 minutes
+- Configurable range: minutes to days
+- Floor plans will be generated using [specify actual tool - e.g., Google AI/custom generator]
+
+### 2. Camera Monitoring Dashboard
+- Live feeds from ~800 CCTV cameras
+- Grid and single-camera views
+- Alert overlays and event markers
+
+### 3. Alerts & Activity Dashboard
+- Real-time alerts from all integrated systems
+- Activity logs with filtering and search
+- Correlation of events across data sources
+
+### 4. Landing/Demo Page
+- B-roll and presentation videos
+- PowerPoint presentations and sales materials
+- Product documentation
+- Login portal
+
+## Technical Architecture
+
+### Authentication
+- Demo login page with default credentials: `admin` / `admin`
+
+### Database Layer
+- **PostgreSQL** (primary, configured via `.env`):
+- Mock real-time data for demo
+- Alerts and activity logs
+- User sessions and configuration
+- **Future Integrations** (design for extensibility):
+- Neo4j: Network/relationship topology
+- Cloudinary (or similar): Image storage and CDN
+- Google AI Vision: Image metadata extraction and analysis
+- Google AI: Analytics, correlation engine, and predictive alerts
+
+### Configuration
+- All database connections and API keys via `.env` file
+- Environment-based configuration for demo vs. production modes
+
+## Deliverables Requested
+1. System architecture diagram
+2. Database schema design
+3. Component/page structure
+4. API endpoint specifications
+5. Integration approach for each data source
+6. UI/UX mockup recommendations based on ELI project
+7. Implementation roadmap
+
+## Constraints
+- This is a demonstration system with mock data
+- Must be impressive for a live demo presentation
+- Should clearly show differentiated value in campus security scenarios
+
+RAW ORIGIONAL REQIREMENTS: I need your help and need your suggestions on designing a college security application.  I would like to create a camera monitoring web application for Brown university, with ~800 CCTV cameras, in the wake of the recent shooting in the past week and they are welcoming us to demo our product.
+
+This application would also work with other security systems, door key fobs, motion detectors, WiFi AP/WAP (using Cisco Catalyst Center integration or homebrew equilivant), etc. all correlated with the smart cameras from IREX.
+
+Use code, ideas, functionality, etc. from our existing ELI web page that is monitoring smart cameras in Peru, we plan on using the same technology in partnership with IREX for this application for Brown University.
+
+Search the internet/social media/news/etc. to get more detail on the improvements, full situation, technical mishaps, what a good camera system would have done, etc. on what a good camera system would have done to better help the situation that recently happened at Brown University and other similar situations at other universities that this system we are going to develop will prevent.
+
+On of the pages/dashboards will have floor plans of class rooms, hallways, conference rooms, etc. (I will use Google Nano Banana to generate these floor plans) in a live simulation showing people moving around (almost like a Pokiman video game 2d view, etc.) detected by the Wi-Fi, RFID cards, face recognitions, phone signatures, etc. all in combination to determine where people are near real-time and track a history of where they have been with a toggle to turn off/on the history trail that is configured to be initially 30 minutes, but can go back for hours or days.
+
+This is a demo and will have a landing page with b-roll videos, presentation videos, PowerPoints, document, sales info, etc. and a login page with the default login/password of admin/admin.
+
+The backend database will be PostgreSQL configured in the .env to store the initial mock real-time data, alerts, activities, etc.  In the future Neo4J (topology), Cloudify (images) will be used in the future, Google AI to scan images to get meta data from the images, and Google AI to give analytics/correlation/predictions/etc.
+
+Please get more context/ideas/functionality/etc. on how to design this application from the previous ELI project for Peru: Github - IanNoble-Visium/ELI: ELI Dashboard web - ELI Unified Dashboard - Peru Surveillance Platform
+
+Please get more context/ideas/functionality/etc. on how to design this application from the Visium Technologies website - Visium Technologies - TruContext Platform
+
+
+
+Cisco Catalyst tracking - but only for Wi‑Fi devices (including phones) and other RF tags—not directly from a physical keycard/fob unless that badge itself is a Wi‑Fi/RFID tag integrated with Cisco’s location services. Cisco Catalyst Center (formerly DNA Center) can show device locations on imported floor maps when combined with the right wireless/location components.cisco+3​
+What Catalyst Center Can Show
+	• Catalyst Center can import or create building and floor maps, place APs on them, and generate RF heatmaps for coverage visualization.cisco​
+	• When integrated with a location engine (CMX, Cisco Spaces, or RTLS platform), wireless client locations can be visualized on those same floor maps, typically updated in near real time.cisco+2​
+	• Client 360 and similar views let you search by user, IP, or MAC and see where that client is connected, including historical location information.study-ccnp+2​
+Tracking Phones / Wi‑Fi Devices
+	• Any device with Wi‑Fi enabled (such as smartphones) can be tracked via probe/association data from surrounding APs, which feed into CMX/Spaces to provide real‑time or recent locations.cisco+1​
+	• Cisco Spaces’ Detect & Locate and related apps provide “device tracker” functionality, showing current and last‑known location of Wi‑Fi devices on uploaded digital maps.cisco+2​
+	• This works even if the device is not actively in use, as long as it is periodically sending Wi‑Fi probes or is associated to the network.study-ccnp​
+Keycards / Fobs (Badges)
+	• Traditional access‑control keycards/fobs that only work on door readers and do not emit Wi‑Fi or compatible RF beacons cannot be located on Catalyst Center floor maps.study-ccnp​
+	• To track people by “badge,” the badge must be an RTLS‑capable tag (for example, Wi‑Fi or active RFID tags used in healthcare or asset tracking) that integrates with Cisco location services such as Cisco Spaces or a partner RTLS platform. Those tags then appear as trackable devices on maps.blogs.cisco+2​
+	• Some third‑party healthcare/location systems integrate with Cisco Spaces to deliver staff/patient badge tracking over the same Wi‑Fi infrastructure, but that relies on specialized tags, not standard door‑access cards.securitashealthcare+1​
+Putting It Together for Your Use Case
+	• Real‑time map tracking in a room is feasible for:
+		○ Wi‑Fi phones and laptops connected to or probing on your WLAN.cisco+1​
+		○ RTLS‑enabled badges or tags integrated with Cisco Spaces/CMX and mapped into your building/floor hierarchy.blogs.cisco+2​
+	• Not feasible directly for:
+		○ Plain “dumb” keycards/fobs used only for doors, with no Wi‑Fi/RTLS function and no integration to a location platform.study-ccnp​
+So, Catalyst Center with the appropriate Cisco location stack can show people’s approximate positions on an imported floor plan via their wireless devices or RTLS badges, but not purely from standard keycard/fob events unless those badges are themselves trackable RF devices integrated into the system.cisco+3​
+	1. https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/2-3-5/user_guide/b_cisco_dna_center_ug_2_3_5/m_work-with-wireless-2d-and-3d-maps.html
+	2. https://www.cisco.com/c/en/us/products/collateral/cloud-systems-management/dna-center/guide-c07-744044.html
+	3. https://study-ccnp.com/wi-fi-device-location-tracking-in-wireless-networks/
+	4. https://www.cisco.com/c/en/us/td/docs/wireless/spaces/detect-and-locate/b-cisco-cle/m-product-overview.html
+	5. https://www.reddit.com/r/Cisco/comments/ue1dcf/dna_center_find_where_user_is_connected_to_the/
+	6. https://www.cisco.com/c/en/us/td/docs/wireless/spaces/detect-and-locate/b-cisco-cle/m_map.html
+	7. https://spaces.cisco.com/detect-locate/
+	8. https://blogs.cisco.com/tag/rtls
+	9. https://www.securitashealthcare.com/news/securitas-healthcare-and-cisco-partner-bring-next-generation-location-services-healthcare
+	10. https://www.youtube.com/watch?v=ntfON_zcpjg
+	11. https://video.cisco.com/detail/video/5830481085001
+	12. https://support.ekahau.com/hc/en-us/articles/20294484365723-Ekahau-Cisco-DNA-C-Dashboard-Integration-How-To-Guide
+	13. https://www.youtube.com/watch?v=qsfafNrR0Cc
+	14. https://oomnitza.zendesk.com/hc/en-us/articles/27323073658775-Creating-an-extended-integration-for-Cisco-DNA-Center-network-assets
+	15. https://www.cisco.com/c/en/us/td/docs/wireless/spaces/config-guide/ciscospaces-configuration-guide/m-locations-and-maps.html
+	16. https://docs.paloaltonetworks.com/iot/iot-security-integration/network-management/integrate-iot-security-with-cisco-dna-center
+	17. https://www.cisco.com/c/en/us/td/docs/wireless/spaces/detect-and-locate/b-cisco-cle/device-tracking.html
+	18. https://developer.cisco.com/docs/dna-center/2-3-5/overview/
+	19. https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center-assurance/2-3-5/b_cisco_dna_assurance_2_3_5_ug/b_cisco_dna_assurance_2_3_3_ug_chapter_01111.html
+	20. https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/catalyst-center/221585-utilize-the-traffic-telemetry-appliance.html
+
+From <https://www.perplexity.ai/search/is-it-possible-for-cisco-catal-S9T6rCOySXqxRhBkGhO2sw> 
