@@ -87,6 +87,10 @@ graph TD
 
 The platform is optimized for Vercel Serverless deployment.
 
+### Vercel Project Settings
+To ensure the correct version of `pnpm` is used, you MUST set the following environment variable in your Vercel project settings:
+- **`ENABLE_COREPACK`**: `1` (This enables `corepack` to use the version specified in `package.json`).
+
 ### Required Environment Variables
 | Variable | Description |
 |----------|-------------|
