@@ -3,11 +3,8 @@
   "installCommand": "corepack enable && pnpm install",
   "builds": [
     {
-      "src": "api/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["server/**", "drizzle/**", "shared/**"]
-      }
+      "src": "api/index.js",
+      "use": "@vercel/node"
     },
     {
       "src": "package.json",
@@ -20,11 +17,11 @@
   "rewrites": [
     {
       "source": "/api/trpc/(.*)",
-      "destination": "api/index.ts"
+      "destination": "api/index.js"
     },
     {
       "source": "/api/(.*)",
-      "destination": "api/index.ts"
+      "destination": "api/index.js"
     },
     {
       "source": "/(.*)",
