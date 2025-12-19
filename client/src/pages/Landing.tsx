@@ -328,6 +328,7 @@ export default function Landing() {
                       <Input
                         id="password"
                         type="password"
+                        autoComplete="current-password"
                         placeholder="Enter password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -536,7 +537,7 @@ export default function Landing() {
                     src="/docs/Campus Safety Initiative_1080p.mp4" 
                     className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                     controls
-                    poster="/images/ceo-video-poster.jpg" // Note: This might not exist, but good practice
+                    preload="metadata"
                   />
                   <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
                     <div className="flex items-center gap-3">
