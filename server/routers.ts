@@ -32,7 +32,7 @@ export const appRouter = router({
         password: z.string(),
       }))
       .mutation(async ({ input, ctx }) => {
-        if (input.username === "admin" && input.password === "admin") {
+        if (input.username.trim() === "admin" && input.password.trim() === "admin") {
           const token = await sdk.createSessionToken(input.username);
           const cookieOptions = getSessionCookieOptions(ctx.req);
           ctx.res.cookie(COOKIE_NAME, token, {
