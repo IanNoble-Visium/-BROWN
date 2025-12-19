@@ -317,6 +317,7 @@ export default function Landing() {
                       <Input
                         id="username"
                         type="text"
+                        autoComplete="username"
                         placeholder="Enter username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
