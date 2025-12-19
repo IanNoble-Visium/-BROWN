@@ -24,7 +24,7 @@
    Create a `.env` file in the root directory:
    ```env
    # Database (use your own PostgreSQL or the provided Neon connection)
-   NEON_DATABASE_URL=postgresql://neondb_owner:npg_D42lIEBRjvHq@ep-little-hat-ahtfclxj-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+   NEON_DATABASE_URL=postgresql://neondb_owner:password_here@ep-some-type-of-pooler.c-3.us-anytown-1.aws.neon.tech/neondb?sslmode=require
    
    # JWT Secret for session management
    JWT_SECRET=your-secret-key-here
